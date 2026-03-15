@@ -1,0 +1,349 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --toolbar-height: 40px;
+  --search-height: 36px;
+  --bg: #1e1e1e;
+  --toolbar-bg: #2d2d2d;
+  --border: #444;
+  --text: #e0e0e0;
+  --accent: #0078d4;
+  --accent-hover: #106ebe;
+  --highlight-color: rgba(255, 220, 0, 0.4);
+  --note-color: rgba(255, 165, 0, 0.15);
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ── Toolbar ── */
+#toolbar {
+  height: var(--toolbar-height);
+  background: var(--toolbar-bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+#toolbar-left, #toolbar-center, #toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#toolbar button {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text);
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+#toolbar button:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--border);
+}
+
+#toolbar button:active {
+  background: rgba(255,255,255,0.15);
+}
+
+#toolbar button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+#toolbar .tool-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+#btn-insert-word {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  font-weight: 600;
+}
+
+#btn-insert-word:hover {
+  background: var(--accent-hover) !important;
+}
+
+#page-info, #zoom-level {
+  font-size: 12px;
+  min-width: 56px;
+  text-align: center;
+  color: #aaa;
+}
+
+.separator {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 4px;
+}
+
+/* ── Search bar ── */
+#search-bar {
+  height: var(--search-height);
+  background: var(--toolbar-bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+#search-input {
+  flex: 1;
+  background: #111;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  outline: none;
+}
+
+#search-input:focus { border-color: var(--accent); }
+
+#search-count { color: #aaa; font-size: 12px; min-width: 48px; }
+
+#search-bar button {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text);
+  padding: 3px 7px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#search-bar button:hover { background: rgba(255,255,255,0.1); }
+
+/* ── Viewer ── */
+#viewer-container {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#drop-zone {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #444;
+  margin: 20px;
+  border-radius: 8px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+#drop-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(0,120,212,0.08);
+}
+
+#drop-zone.hidden { display: none; }
+
+#drop-message {
+  text-align: center;
+  color: #666;
+  line-height: 1.8;
+}
+
+#drop-message p:first-child { font-size: 32px; margin-bottom: 8px; }
+
+/* ── Canvas + Layers ── */
+#pdf-canvas {
+  display: block;
+  margin: 20px auto;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+}
+
+#pdf-canvas.hidden { display: none; }
+
+#annotation-layer {
+  position: absolute;
+  pointer-events: none;
+  top: 0; left: 0;
+}
+
+#text-layer {
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: auto;
+  cursor: text;
+}
+
+#text-layer span {
+  position: absolute;
+  white-space: pre;
+  color: transparent;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+
+#text-layer span::selection {
+  background: rgba(0,120,212,0.3);
+}
+
+/* ── Highlights (annotations) ── */
+.highlight-mark {
+  position: absolute;
+  background: var(--highlight-color);
+  pointer-events: auto;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.note-mark {
+  position: absolute;
+  background: var(--note-color);
+  border-left: 3px solid orange;
+  pointer-events: auto;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+/* ── Note popup ── */
+#note-popup {
+  position: fixed;
+  background: #2d2d2d;
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  z-index: 1000;
+  width: 240px;
+}
+
+#note-text {
+  width: 100%;
+  height: 80px;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  color: var(--text);
+  border-radius: 4px;
+  padding: 6px;
+  font-size: 13px;
+  resize: none;
+  outline: none;
+}
+
+#note-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  justify-content: flex-end;
+}
+
+#note-actions button {
+  padding: 4px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#btn-note-save {
+  background: var(--accent);
+  color: white;
+}
+
+#btn-note-cancel {
+  background: #444;
+  color: var(--text);
+}
+
+/* ── OneDrive modal ── */
+#onedrive-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#onedrive-content {
+  background: #2d2d2d;
+  border: 1px solid #555;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 480px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#onedrive-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #444;
+  font-weight: 600;
+}
+
+#btn-onedrive-close {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#onedrive-breadcrumb {
+  padding: 8px 16px;
+  font-size: 12px;
+  color: #aaa;
+  border-bottom: 1px solid #333;
+}
+
+#onedrive-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.onedrive-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid #333;
+}
+
+.onedrive-item:hover { background: rgba(255,255,255,0.06); }
+
+.onedrive-item .item-icon { font-size: 18px; }
+.onedrive-item .item-name { flex: 1; font-size: 13px; }
+.onedrive-item .item-size { font-size: 11px; color: #888; }

@@ -1,0 +1,19 @@
+{
+  "name": "pdf-reader-companion",
+  "version": "1.0.0",
+  "description": "Companion app que registra o Word como leitor padrão de PDF",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "register": "node src/register.js install",
+    "unregister": "node src/register.js uninstall",
+    "build": "pkg src/index.js --target node18-win-x64 --output dist/pdf-reader-companion.exe"
+  },
+  "pkg": {
+    "assets": [],
+    "targets": ["node18-win-x64"]
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
+  }
+}

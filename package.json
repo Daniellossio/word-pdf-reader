@@ -1,0 +1,12 @@
+{
+  "name": "word-pdf-reader",
+  "version": "1.0.0",
+  "description": "Add-in Word para leitura nativa de PDFs",
+  "scripts": {
+    "start": "node server.js",
+    "install-addin": "echo 'Veja as instruções no README.md'",
+    "build-companion": "cd companion && npm install && npm run build",
+    "register": "cd companion && node src/register.js install",
+    "unregister": "cd companion && node src/register.js uninstall"
+  }
+}

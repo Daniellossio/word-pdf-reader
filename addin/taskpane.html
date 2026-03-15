@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Reader</title>
+  <link rel="stylesheet" href="styles/taskpane.css" />
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+  <!-- Office.js -->
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+</head>
+<body>
+  <!-- Toolbar -->
+  <div id="toolbar">
+    <div id="toolbar-left">
+      <button id="btn-open-local" title="Abrir PDF local">📂 Local</button>
+      <button id="btn-open-onedrive" title="Abrir do OneDrive">☁️ OneDrive</button>
+    </div>
+    <div id="toolbar-center">
+      <button id="btn-prev" title="Página anterior">◀</button>
+      <span id="page-info">1 / 1</span>
+      <button id="btn-next" title="Próxima página">▶</button>
+    </div>
+    <div id="toolbar-right">
+      <button id="btn-zoom-out" title="Diminuir zoom">−</button>
+      <span id="zoom-level">100%</span>
+      <button id="btn-zoom-in" title="Aumentar zoom">+</button>
+      <button id="btn-zoom-fit" title="Ajustar à largura">⊡</button>
+      <div class="separator"></div>
+      <button id="btn-highlight" class="tool-btn" title="Destacar texto">🖊</button>
+      <button id="btn-note" class="tool-btn" title="Adicionar nota">📝</button>
+      <button id="btn-insert-word" title="Inserir seleção no Word">→ Word</button>
+    </div>
+  </div>
+
+  <!-- Search bar -->
+  <div id="search-bar" style="display:none">
+    <input id="search-input" type="text" placeholder="Buscar no PDF..." />
+    <button id="btn-search-prev">▲</button>
+    <button id="btn-search-next">▼</button>
+    <span id="search-count"></span>
+    <button id="btn-search-close">✕</button>
+  </div>
+
+  <!-- Main viewer -->
+  <div id="viewer-container">
+    <div id="drop-zone">
+      <div id="drop-message">
+        <p>📄 Nenhum PDF aberto</p>
+        <p>Clique em <strong>Local</strong> ou <strong>OneDrive</strong><br/>ou arraste um PDF aqui</p>
+      </div>
+    </div>
+    <canvas id="pdf-canvas"></canvas>
+    <div id="annotation-layer"></div>
+    <div id="text-layer"></div>
+  </div>
+
+  <!-- Note popup -->
+  <div id="note-popup" style="display:none">
+    <textarea id="note-text" placeholder="Digite sua nota..."></textarea>
+    <div id="note-actions">
+      <button id="btn-note-save">Salvar</button>
+      <button id="btn-note-cancel">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- OneDrive picker modal -->
+  <div id="onedrive-modal" style="display:none">
+    <div id="onedrive-content">
+      <div id="onedrive-header">
+        <span>☁️ OneDrive — Selecionar PDF</span>
+        <button id="btn-onedrive-close">✕</button>
+      </div>
+      <div id="onedrive-breadcrumb"></div>
+      <div id="onedrive-list"></div>
+    </div>
+  </div>
+
+  <!-- Hidden file input -->
+  <input type="file" id="file-input" accept=".pdf" style="display:none" />
+
+  <script type="module" src="src/taskpane.js"></script>
+</body>
+</html>
